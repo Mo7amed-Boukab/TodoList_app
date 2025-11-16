@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Mo7amed-Boukab/TodoList_Express#readme",
   "description": "",
   "dependencies": {
+    "compression": "^1.8.1",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-validator": "^7.3.0",

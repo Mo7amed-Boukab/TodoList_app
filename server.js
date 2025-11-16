@@ -6,6 +6,7 @@ const router = require("./src/routes/route");
 
 const logger = require("./src/utils/logger");
 const requestLogger = require("./src/middlewares/loggerMiddleware");
+const compression = require("compression");
 
 const PORT = process.env.PORT || 8000;
 
@@ -20,6 +21,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Api is running successfully ..");
 });
+
+// Middleware for compression HTTP 
+app.use(compression());
 
 // Routes
 app.use("/api/todos", router);
