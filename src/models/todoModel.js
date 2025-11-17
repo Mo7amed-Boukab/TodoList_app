@@ -8,15 +8,15 @@ const todoSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: "",
+      default: '',
     },
     status: {
       type: String,
-      enum: ["pending", "done"],
-      default: "pending",
+      enum: ['pending', 'done'],
+      default: 'pending',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Todo", todoSchema);
+module.exports = mongoose.model('Todo', todoSchema);

@@ -1,27 +1,27 @@
-const { body } = require("express-validator");
-const validatorMeddleware = require("../../middlewares/validatorMeddleware");
+const { body } = require('express-validator');
+const validatorMeddleware = require('../../middlewares/validatorMeddleware');
 
 const updateTodoValidator = [
-  body("title")
+  body('title')
     .optional()
     .trim()
     .notEmpty()
-    .withMessage("Title cannot be empty")
+    .withMessage('Title cannot be empty')
     .isString()
-    .withMessage("Title must be a string"),
+    .withMessage('Title must be a string'),
 
-  body("description")
+  body('description')
     .optional()
     .trim()
     .isString()
-    .withMessage("Description must be a string"),
+    .withMessage('Description must be a string'),
 
-  body("status")
+  body('status')
     .optional()
-    .isIn(["pending", "done"])
+    .isIn(['pending', 'done'])
     .withMessage("Status must be either 'pending' or 'done'"),
 
-    validatorMeddleware
+  validatorMeddleware,
 ];
 
 module.exports = updateTodoValidator;

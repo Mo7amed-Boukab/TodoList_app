@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const Todo = require("../models/todoModel");
-const logger = require("../utils/logger");
+const mongoose = require('mongoose');
+const Todo = require('../models/todoModel');
+const logger = require('../utils/logger');
 
 class TodoController {
   async createTodo(req, res) {
@@ -8,15 +8,15 @@ class TodoController {
       const { title, description, status } = req.body;
 
       const newTodo = await Todo.create({ title, description, status });
- 
+
       logger.info(`Todo created: ${newTodo._id}`);
       return res.status(201).json({
         success: true,
-        message: "Todo created successfully",
+        message: 'Todo created successfully',
         data: newTodo,
       });
     } catch (err) {
-      logger.error(`CreateTodo Error: ${err.message}`);  
+      logger.error(`CreateTodo Error: ${err.message}`);
       return res.status(500).json({
         success: false,
         error: err.message,
@@ -31,11 +31,11 @@ class TodoController {
       logger.info(`Retrieved ${todos.length} todos`);
       return res.status(200).json({
         success: true,
-        message: "All Todos retrieved successfully",
+        message: 'All Todos retrieved successfully',
         data: todos,
       });
     } catch (err) {
-      logger.error(`getAllTodos Error: ${err.message}`);   
+      logger.error(`getAllTodos Error: ${err.message}`);
       return res.status(500).json({
         success: false,
         error: err.message,
@@ -51,10 +51,10 @@ class TodoController {
         logger.warn(`Invalid ID format: ${id}`);
         return res.status(400).json({
           success: false,
-          message: "Invalid ID format",
+          message: 'Invalid ID format',
         });
       }
-      
+
       const todo = await Todo.findById(id);
 
       if (!todo) {
@@ -68,7 +68,7 @@ class TodoController {
       logger.info(`Todo fetched: ${id}`);
       return res.status(200).json({
         success: true,
-        message: "Todo found successfully",
+        message: 'Todo found successfully',
         data: todo,
       });
     } catch (err) {
@@ -88,7 +88,7 @@ class TodoController {
         logger.warn(`Invalid ID for update: ${id}`);
         return res.status(400).json({
           success: false,
-          message: "Invalid ID format",
+          message: 'Invalid ID format',
         });
       }
 
@@ -111,7 +111,7 @@ class TodoController {
       logger.info(`Todo updated: ${id}`);
       return res.status(200).json({
         success: true,
-        message: "Todo updated successfully",
+        message: 'Todo updated successfully',
         data: updatedTodo,
       });
     } catch (err) {
@@ -131,7 +131,7 @@ class TodoController {
         logger.warn(`Invalid ID for delete: ${id}`);
         return res.status(400).json({
           success: false,
-          message: "Invalid ID format",
+          message: 'Invalid ID format',
         });
       }
 
@@ -148,7 +148,7 @@ class TodoController {
       logger.info(`Todo deleted: ${id}`);
       return res.status(200).json({
         success: true,
-        message: "Todo deleted successfully",
+        message: 'Todo deleted successfully',
         data: deletedTodo,
       });
     } catch (err) {

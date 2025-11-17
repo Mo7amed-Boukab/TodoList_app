@@ -1,12 +1,12 @@
-const express = require("express");
-const dbConnection = require("./config/database");
-require("dotenv").config();
+const express = require('express');
+const dbConnection = require('./config/database');
+require('dotenv').config();
 
-const router = require("./src/routes/route");
+const router = require('./src/routes/route');
 
-const logger = require("./src/utils/logger");
-const requestLogger = require("./src/middlewares/loggerMiddleware");
-const compression = require("compression");
+const logger = require('./src/utils/logger');
+const requestLogger = require('./src/middlewares/loggerMiddleware');
+const compression = require('compression');
 
 const PORT = process.env.PORT || 8000;
 
@@ -18,15 +18,15 @@ app.use(requestLogger);
 // Middleware pour lire JSON
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Api is running successfully ..");
+app.get('/', (req, res) => {
+  res.send('Api is running successfully ..');
 });
 
-// Middleware for compression HTTP 
+// Middleware for compression HTTP
 app.use(compression());
 
 // Routes
-app.use("/api/todos", router);
+app.use('/api/todos', router);
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: err.message });
 });
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === 'development') {
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
 

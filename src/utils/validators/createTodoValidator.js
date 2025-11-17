@@ -1,23 +1,23 @@
-const { body } = require("express-validator");
-const validatorMeddleware = require("../../middlewares/validatorMeddleware");
+const { body } = require('express-validator');
+const validatorMeddleware = require('../../middlewares/validatorMeddleware');
 
 const createTodoValidator = [
-  body("title")
+  body('title')
     .trim()
     .notEmpty()
-    .withMessage("Title is required")
+    .withMessage('Title is required')
     .isString()
-    .withMessage("Title must be a string"),
+    .withMessage('Title must be a string'),
 
-  body("description")
+  body('description')
     .optional()
     .trim()
     .isString()
-    .withMessage("Description must be a string"),
+    .withMessage('Description must be a string'),
 
-  body("status")
+  body('status')
     .optional()
-    .isIn(["pending", "done"])
+    .isIn(['pending', 'done'])
     .withMessage("Status must be either 'pending' or 'done'"),
 
   validatorMeddleware,
