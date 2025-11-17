@@ -7,9 +7,8 @@ module.exports = {
     'config/**/*.js',
     '!server.js',         
     '!src/**/*.test.js',
-    '!src/**/*.spec.js',
   ],
-  testMatch: ['**/tests/**/*.test.js', '**/tests/**/*.spec.js'],
+  testMatch: ['**/tests/**/*.test.js'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   testTimeout: 10000,
 };
