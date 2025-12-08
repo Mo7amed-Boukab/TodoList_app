@@ -1,7 +1,9 @@
 const express = require('express');
 const compression = require('compression');
-const router = require('./src/routes/route');
+const todoRoutes = require('./src/routes/todoRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 const requestLogger = require('./src/middlewares/loggerMiddleware');
+const logger = require('./src/utils/logger');
 const { monitoringMiddleware, client } = require('./src/middlewares/monitoringMiddleware');
 
 const app = express();
@@ -27,7 +29,8 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/api/todos', router);
+app.use('/api/auth', authRoutes);
+app.use('/api/todos', todoRoutes);
 
 // Endpoint pour récupérer toutes les métriques
 app.get('/metrics', async (req, res) => {

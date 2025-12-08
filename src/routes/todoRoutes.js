@@ -4,7 +4,10 @@ const router = express.Router();
 const createTodoValidator = require('../utils/validators/createTodoValidator');
 const updateTodoValidator = require('../utils/validators/updateTodoValidator');
 
-const TodoController = require('../controllers/TodoController');
+const TodoController = require('../controllers/todoController');
+const { protect } = require('../middlewares/authMiddleware');
+
+router.use(protect); // Protect all routes
 
 router.post('/', createTodoValidator, TodoController.createTodo);
 router.put('/:id', updateTodoValidator, TodoController.updateTodo);

@@ -24,10 +24,12 @@
   "homepage": "https://github.com/Mo7amed-Boukab/TodoList_Express#readme",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "compression": "^1.8.1",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-validator": "^7.3.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.19.4",
     "nodemon": "^3.1.11",
     "prom-client": "^15.1.3",

@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const validatorMeddleware = require('../../middlewares/validatorMeddleware');
+const validatorMiddleware = require('../../middlewares/validatorMiddleware');
 
 const createTodoValidator = [
   body('title')
@@ -20,7 +20,7 @@ const createTodoValidator = [
     .isIn(['pending', 'done'])
     .withMessage("Status must be either 'pending' or 'done'"),
 
-  validatorMeddleware,
+  validatorMiddleware,
 ];
 
 module.exports = createTodoValidator;

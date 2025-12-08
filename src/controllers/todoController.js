@@ -7,7 +7,12 @@ class TodoController {
     try {
       const { title, description, status } = req.body;
 
-      const newTodo = await Todo.create({ title, description, status });
+      const newTodo = await Todo.create({
+        title,
+        description,
+        status,
+        user: req.user.id,
+      });
 
       logger.info(`Todo created: ${newTodo._id}`);
       return res.status(201).json({
@@ -26,7 +31,7 @@ class TodoController {
 
   async getAllTodos(req, res) {
     try {
-      const todos = await Todo.find();
+      const todos = await Todo.find({ user: req.user.id });
 
       logger.info(`Retrieved ${todos.length} todos`);
       return res.status(200).json({
@@ -65,6 +70,14 @@ class TodoController {
         });
       }
 
+      // Check for user
+      if (todo.user.toString() !== req.user.id) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authorized',
+        });
+      }
+
       logger.info(`Todo fetched: ${id}`);
       return res.status(200).json({
         success: true,
@@ -94,19 +107,29 @@ class TodoController {
 
       const { title, description, status } = req.body;
 
-      const updatedTodo = await Todo.findByIdAndUpdate(
-        id,
-        { title, description, status },
-        { new: true, runValidators: true }
-      );
+      const todo = await Todo.findById(id);
 
-      if (!updatedTodo) {
+      if (!todo) {
         logger.warn(`Update failed, Todo not found: ${id}`);
         return res.status(404).json({
           success: false,
           message: `No Todo found with ID ${id}`,
         });
       }
+
+      // Check for user
+      if (todo.user.toString() !== req.user.id) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authorized',
+        });
+      }
+
+      const updatedTodo = await Todo.findByIdAndUpdate(
+        id,
+        { title, description, status },
+        { new: true, runValidators: true }
+      );
 
       logger.info(`Todo updated: ${id}`);
       return res.status(200).json({
@@ -135,9 +158,9 @@ class TodoController {
         });
       }
 
-      const deletedTodo = await Todo.findByIdAndDelete(id);
+      const todo = await Todo.findById(id);
 
-      if (!deletedTodo) {
+      if (!todo) {
         logger.warn(`Delete failed, Todo not found: ${id}`);
         return res.status(404).json({
           success: false,
@@ -145,11 +168,21 @@ class TodoController {
         });
       }
 
+      // Check for user
+      if (todo.user.toString() !== req.user.id) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authorized',
+        });
+      }
+
+      await todo.deleteOne();
+
       logger.info(`Todo deleted: ${id}`);
       return res.status(200).json({
         success: true,
         message: 'Todo deleted successfully',
-        data: deletedTodo,
+        id: id,
       });
     } catch (err) {
       logger.error(`deleteTodo Error: ${err.message}`);
