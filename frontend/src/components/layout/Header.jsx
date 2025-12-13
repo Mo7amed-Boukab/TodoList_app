@@ -30,7 +30,7 @@ const Header = () => {
                         </div>
                         <Button
                             variant="ghost"
-                            className="text-gray-500 hover:text-red-600 font-medium flex items-center gap-2"
+                            className="text-gray-500 hover:text-red-700 font-medium flex items-center gap-2"
                             onClick={handleLogout}
                         >
                             <LogOut size={18} />

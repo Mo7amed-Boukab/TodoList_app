@@ -1,18 +1,42 @@
+import React, { useState, useEffect } from 'react';
 import KanbanColumn from './KanbanColumn';
-import { mockTasks, columns } from '../../data/mockData';
 
-const KanbanBoard = () => {
+const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick }) => {
     // Distribute tasks to columns
-    const getTasksByStatus = (status) => mockTasks.filter(task => task.status === status);
+    const columns = {
+        todo: { title: 'To Do', count: todos.filter(t => t.status === 'todo').length },
+        in_progress: { title: 'In Progress', count: todos.filter(t => t.status === 'in_progress').length },
+        done: { title: 'Completed', count: todos.filter(t => t.status === 'done').length }
+    };
+
+    const getTasksByStatus = (status) => todos.filter(task => task.status === status);
+
+    const [activeMenuId, setActiveMenuId] = useState(null);
+
+    const handleToggleMenu = (taskId) => {
+        setActiveMenuId(prevId => prevId === taskId ? null : taskId);
+    };
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = () => setActiveMenuId(null);
+        window.addEventListener('click', handleClickOutside);
+        return () => window.removeEventListener('click', handleClickOutside);
+    }, []);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
-            {Object.entries(columns).map(([id, colDef]) => (
+            {Object.keys(columns).map((status) => (
                 <KanbanColumn
-                    key={id}
-                    columnId={id}
-                    columnDef={colDef}
-                    tasks={getTasksByStatus(id)}
+                    key={status}
+                    columnId={status}
+                    columnDef={columns[status]}
+                    tasks={getTasksByStatus(status)}
+                    onTaskUpdated={onTaskUpdated}
+                    onTaskDeleted={onTaskDeleted}
+                    activeMenuId={activeMenuId}
+                    onToggleMenu={handleToggleMenu}
+                    onTaskClick={onTaskClick}
                 />
             ))}
         </div>

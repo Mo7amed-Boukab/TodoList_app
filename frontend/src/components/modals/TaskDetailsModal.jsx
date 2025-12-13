@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Calendar, Flag, AlignLeft, Type, Loader2 } from 'lucide-react';
 import todoService from '../../services/todoService';
 
-
-const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
+const TaskDetailsModal = ({ isOpen, onClose, task, onTaskUpdated }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('medium');
@@ -11,7 +10,17 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (task) {
+            setTitle(task.title || '');
+            setDescription(task.description || '');
+            setPriority(task.priority || 'medium');
+            setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '');
+            setError('');
+        }
+    }, [task, isOpen]);
+
+    if (!isOpen || !task) return null;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +28,7 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
         setError('');
 
         try {
-            const response = await todoService.createTodo({
+            const response = await todoService.updateTodo(task._id, {
                 title,
                 description,
                 priority,
@@ -27,33 +36,24 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
             });
 
             if (response.success) {
-                onTaskCreated(response.data);
-                resetForm();
+                onTaskUpdated(response.data);
                 onClose();
             }
         } catch (err) {
-            console.error('Create task error:', err);
-            setError('Failed to create task. Please try again.');
+            console.error('Update task error:', err);
+            setError('Failed to update task. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const resetForm = () => {
-        setTitle('');
-        setDescription('');
-        setPriority('medium');
-        setDueDate('');
-        setError('');
-    };
-
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/10 animate-fade-in">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/10 animate-fade-in">
             <div className="bg-white rounded w-full max-w-xl overflow-hidden transform transition-all scale-100">
 
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
-                    <h2 className="text-2xl font-serif font-bold text-gray-900">Nouvelle Tâche</h2>
+                    <h2 className="text-2xl font-serif font-bold text-gray-900">Détails de la tâche</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors p-1"
@@ -83,7 +83,6 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
                                     type="text"
                                     placeholder="Titre de la tâche"
                                     className="block w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none"
-                                    autoFocus
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     required
@@ -169,7 +168,7 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
                             disabled={loading}
                         >
                             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                            Créer la tâche
+                            Sauvegarder
                         </button>
                     </div>
                 </form>
@@ -178,4 +177,4 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
     );
 };
 
-export default AddTaskModal;
+export default TaskDetailsModal;

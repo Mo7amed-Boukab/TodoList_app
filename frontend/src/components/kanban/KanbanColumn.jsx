@@ -1,4 +1,3 @@
-import React from 'react';
 import TaskCard from './TaskCard';
 import { Circle, Loader2, CheckCircle2 } from 'lucide-react';
 
@@ -8,7 +7,7 @@ const icons = {
     done: <CheckCircle2 size={20} className="text-gray-900" />
 }
 
-const KanbanColumn = ({ columnId, columnDef, tasks }) => {
+const KanbanColumn = ({ columnId, columnDef, tasks, onTaskUpdated, onTaskDeleted, activeMenuId, onToggleMenu, onTaskClick }) => {
     return (
         <div className="flex flex-col h-full min-w-[320px] bg-slate-50/50 rounded p-4 border border-slate-100/50">
             {/* Column Header */}
@@ -23,9 +22,17 @@ const KanbanColumn = ({ columnId, columnDef, tasks }) => {
             </div>
 
             {/* Tasks List */}
-            <div className="flex flex-col gap-4 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="flex flex-col gap-4 overflow-y-auto pr-2 no-scrollbar">
                 {tasks.map(task => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard
+                        key={task._id}
+                        task={task}
+                        onUpdate={onTaskUpdated}
+                        onDelete={onTaskDeleted}
+                        isMenuOpen={activeMenuId === task._id}
+                        onToggleMenu={onToggleMenu}
+                        onClick={() => onTaskClick(task)}
+                    />
                 ))}
             </div>
         </div>
