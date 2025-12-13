@@ -1,8 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        try {
+            const response = await login(email, password);
+            if (response.success) {
+                navigate('/');
+            } else {
+                setError(response.message || 'Login failed');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'An error occurred');
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-white px-4">
             <div className="w-full max-w-[500px] p-8">
@@ -14,8 +36,14 @@ const LoginPage = () => {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="bg-red-50 text-red-500 text-sm p-3 rounded mb-5 text-center">
+                        {error}
+                    </div>
+                )}
+
                 {/* Form */}
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleSubmit}>
 
                     {/* Email Input */}
                     <div className="relative group">
@@ -26,6 +54,9 @@ const LoginPage = () => {
                             type="email"
                             placeholder="Entrez votre email"
                             className="block w-full pl-11 pr-4 py-2.5 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none bg-white"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -38,6 +69,9 @@ const LoginPage = () => {
                             type="password"
                             placeholder="Entrez votre mot de passe"
                             className="block w-full pl-11 pr-4 py-2.5 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none bg-white"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
 

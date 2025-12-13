@@ -1,8 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const RegisterPage = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [terms, setTerms] = useState(false);
+    const [error, setError] = useState('');
+    const { register } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!terms) {
+            setError('Please accept terms and conditions');
+            return;
+        }
+
+        try {
+            const response = await register(username, email, password);
+            if (response.success) {
+                navigate('/');
+            } else {
+                setError(response.message || 'Registration failed');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'An error occurred');
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-white px-4">
             <div className="w-full max-w-[500px] p-8">
@@ -14,8 +44,14 @@ const RegisterPage = () => {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="bg-red-50 text-red-500 text-sm p-3 rounded mb-5 text-center">
+                        {error}
+                    </div>
+                )}
+
                 {/* Form */}
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleSubmit}>
 
                     {/* Name Input */}
                     <div className="relative group">
@@ -26,6 +62,9 @@ const RegisterPage = () => {
                             type="text"
                             placeholder="Entrez votre nom complet"
                             className="block w-full pl-11 pr-4 py-2.5 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none bg-white"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -38,6 +77,9 @@ const RegisterPage = () => {
                             type="email"
                             placeholder="Entrez votre email"
                             className="block w-full pl-11 pr-4 py-2.5 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none bg-white"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -50,6 +92,9 @@ const RegisterPage = () => {
                             type="password"
                             placeholder="Créez un mot de passe"
                             className="block w-full pl-11 pr-4 py-2.5 text-sm border border-gray-200 rounded text-gray-900 placeholder-gray-400 focus:outline-none bg-white"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -60,6 +105,8 @@ const RegisterPage = () => {
                                 id="terms"
                                 type="checkbox"
                                 className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer"
+                                checked={terms}
+                                onChange={(e) => setTerms(e.target.checked)}
                             />
                         </div>
                         <div className="text-sm">
