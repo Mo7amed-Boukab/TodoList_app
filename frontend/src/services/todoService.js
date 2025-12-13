@@ -19,6 +19,11 @@ const todoService = {
     deleteTodo: async (id) => {
         const response = await api.delete(`/todos/${id}`);
         return response.data;
+    },
+
+    reorderTodos: async (items) => {
+        const response = await api.put('/todos/reorder', { items });
+        return response.data;
     }
 };
 
