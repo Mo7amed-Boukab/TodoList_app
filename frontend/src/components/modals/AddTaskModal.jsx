@@ -53,7 +53,7 @@ const AddTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
 
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
-                    <h2 className="text-2xl font-serif font-bold text-gray-900">Nouvelle Tâche</h2>
+                    <h2 className="text-lg lg:text-xl font-serif font-bold text-gray-900">Nouvelle Tâche</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors p-1"

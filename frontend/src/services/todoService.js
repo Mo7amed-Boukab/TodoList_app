@@ -22,7 +22,7 @@ const todoService = {
     },
 
     reorderTodos: async (items) => {
-        const response = await api.put('/todos/reorder', { items });
+        const response = await api.put('/todos/reorder', { todos: items });
         return response.data;
     }
 };

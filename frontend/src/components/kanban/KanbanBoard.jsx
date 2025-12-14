@@ -13,7 +13,7 @@ import KanbanColumn from './KanbanColumn';
 import TaskCard from './TaskCard';
 import todoService from '../../services/todoService';
 
-const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick }) => {
+const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick, onTasksReordered }) => {
     // Local state for optimistic updates
     const [items, setItems] = useState({});
     const [activeId, setActiveId] = useState(null);
@@ -22,9 +22,9 @@ const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick }) 
     useEffect(() => {
         // Group todos by status
         const newItems = {
-            todo: todos.filter(t => t.status === 'todo').sort((a, b) => a.position - b.position),
-            in_progress: todos.filter(t => t.status === 'in_progress').sort((a, b) => a.position - b.position),
-            done: todos.filter(t => t.status === 'done').sort((a, b) => a.position - b.position)
+            todo: todos.filter(t => t.status === 'todo').sort((a, b) => a.order - b.order),
+            in_progress: todos.filter(t => t.status === 'in_progress').sort((a, b) => a.order - b.order),
+            done: todos.filter(t => t.status === 'done').sort((a, b) => a.order - b.order)
         };
         setItems(newItems);
     }, [todos]);
@@ -166,7 +166,7 @@ const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick }) 
                 updates.push({
                     id: item._id,
                     status: key,
-                    position: index
+                    order: index // Backend expects 'order'
                 });
             });
         });
@@ -178,6 +178,9 @@ const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick }) 
             await todoService.reorderTodos(uniqueUpdates);
             // We don't need to refetch immediately if we trust our optimistic update, 
             // but normally we might want to refresh. For now keeping optimistic state.
+            if (onTasksReordered) {
+                onTasksReordered(uniqueUpdates);
+            }
         } catch (error) {
             console.error("Failed to save reorder:", error);
             // Revert changes? For now just log error.

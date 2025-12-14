@@ -14,17 +14,17 @@ const Header = () => {
     };
 
     return (
-        <header className="flex items-center justify-between px-20 py-8 bg-white border-b border-gray-100">
+        <header className="flex items-center justify-between px-4 md:px-8 lg:px-20 py-8 bg-white border-b border-gray-100">
             <div className="flex items-center gap-2">
                 <Link to="/">
-                    <h1 className="text-2xl font-bold text-gray-900 tracking-tight">To Do List</h1>
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">To Do List</h1>
                 </Link>
             </div>
 
             <div className="flex items-center gap-4">
                 {user ? (
-                    <>
-                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <div className="flex items-center gap-4">
+                        <div className="hidden lg:flex items-center gap-2 text-xs md:text-sm font-medium text-gray-700">
                             <User size={18} className="text-gray-400" />
                             <span>Bienvenue, {user.username}</span>
                         </div>
@@ -36,7 +36,7 @@ const Header = () => {
                             <LogOut size={18} />
                             Logout
                         </Button>
-                    </>
+                    </div>
                 ) : (
                     <>
                         <Link to="/login">
