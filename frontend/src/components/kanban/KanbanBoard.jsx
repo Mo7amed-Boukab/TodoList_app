@@ -171,19 +171,14 @@ const KanbanBoard = ({ todos = [], onTaskUpdated, onTaskDeleted, onTaskClick, on
             });
         });
 
-        // Call backend to save order
         try {
-            // De-duplicate updates based on id, prefer last one (though logic above shouldn't produce duplicates if containers distinct or same)
             const uniqueUpdates = [...new Map(updates.map(item => [item.id, item])).values()];
             await todoService.reorderTodos(uniqueUpdates);
-            // We don't need to refetch immediately if we trust our optimistic update, 
-            // but normally we might want to refresh. For now keeping optimistic state.
             if (onTasksReordered) {
                 onTasksReordered(uniqueUpdates);
             }
         } catch (error) {
             console.error("Failed to save reorder:", error);
-            // Revert changes? For now just log error.
         }
     };
 

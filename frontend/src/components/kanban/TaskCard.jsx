@@ -17,7 +17,7 @@ const TaskCard = ({ task, onUpdate, onDelete, isMenuOpen, onToggleMenu, onClick,
         isDragging,
     } = useSortable({
         id: task._id,
-        disabled: isOverlay // Disable internal drag logic if it's the overlay itself (optional, but good practice)
+        disabled: isOverlay 
     });
 
     const style = {
